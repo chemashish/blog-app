@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name="Tags")
+@Table(name="tags")
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class Tag {
     private String name;
     @Column(name = "created_at")
     private String createdAt;
-    @Column(name = "updatea-at")
+    @Column(name = "updated_at")
     private String updatedAt;
 
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})

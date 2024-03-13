@@ -38,10 +38,9 @@ public class Post {
     )
     private List<Tag> tags;
 
-    @OneToMany(cascade = CascadeType.ALL) 
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
-
     public Post(){}
     public Post(String title, String content, User author) {
         this.title = title;
