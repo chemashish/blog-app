@@ -34,9 +34,13 @@
     </div>
 
    <form th:action="@{/publish}"  th:object="${post}" method="POST">
+       <input type="hidden" th:field="*{id}">
        <input type="text" placeholder="Title" th:field="*{title}"/>
        <br>
-       <input type="text" placeholder="Tags" name="tag" >
+       <input type="text" placeholder="Tags" name="tag" th:value="*{tags}">
+
+<!--       <input type="text" placeholder="Tags" th:text="${tagList}">-->
+
        <textarea class="content" placeholder="Write here...." th:field="*{content}"></textarea>
        <br>
        <input type="submit" value="Publish">

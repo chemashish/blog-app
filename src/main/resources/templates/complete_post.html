@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Complete Post</title>
+</head>
+<body>
+
+      <h3>My Blog Application</h3>
+     <div th:object="${post}">
+           <h2 th:text="*{title}"></h2>
+         <h3><span th:text="*{author}"></span>,<span th:text="*{publishedAt}"></span></h3>
+         <div th:text="*{content}"></div>
+         <a th:href="@{/updatePost(postId=${post.id})}"
+            class="btn btn-info btn-sm">
+             Update
+         </a>
+         <a th:href="@{/deletePost(postId=${post.id})}"
+            class="btn btn-danger btn-sm">
+             Delete
+         </a>
+     </div>
+
+</body>
+</html>

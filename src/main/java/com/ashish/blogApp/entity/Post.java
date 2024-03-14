@@ -3,6 +3,7 @@ package com.ashish.blogApp.entity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -30,7 +31,7 @@ public class Post {
     @Column(name = "updated_at")
     private String updatedAt;
 
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(
             name = "Post_Tags",
             joinColumns =@JoinColumn(name = "post_id"),
@@ -127,6 +128,14 @@ public class Post {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+//    public void setTags(String string){
+//        List<String> tagStringList = Arrays.asList(string.split(","));
+//        List<Tag> tagsList = new ArrayList<>();
+//        for(String tempTag: tagStringList){
+//            Tag tag = new Tag(tempTag);
+//        }
+//    }
 
     public List<Comment> getComments() {
         return comments;

@@ -5,6 +5,20 @@
     <title>Title</title>
 </head>
 <body>
+     <nav>
+         <h2>My Blog Application</h2>
+         <a>Login</a>
+     </nav>
 
+     <div  class="blog-card-container" th:each="post:${allposts}" >
+         <a  th:href="@{/post(postId=${post.id})}" class="blog-card">
+             <div class="heading">
+                 <h4 th:text="${post.title}" >My Blog Application</h4>
+                 <p th:text="${post.author}"><span th:text="${post.publishedAt}"></span></p>
+             </div>
+             <div class="content" th:text="${post.content}">
+             </div>
+         </a>
+     </div>
 </body>
 </html>
