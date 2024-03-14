@@ -20,11 +20,11 @@ import java.util.*;
 @Controller
 public class PostController {
     private PostService postService;
-    //private TagService tagService;
+    private TagService tagService;
     @Autowired
-    public PostController(PostService postService , TagService service) {
+    public PostController(PostService postService , TagService tagService) {
         this.postService = postService;
-        //this.tagService = tagService;
+        this.tagService = tagService;
     }
     @GetMapping("/newpost")
     public String createPost(Model model){
@@ -33,22 +33,32 @@ public class PostController {
         return "post";
     }
     @PostMapping("/publish")
-    public String publishPost(@ModelAttribute("post") Post post) {
-//        List<Tag> tagsInDB = tagService.findAllTag();
-//        Set<Tag> tags1 = new HashSet<>(tagsInDB);
-//        List<Tag> tagsInPost = post.getTags();
-//        List<Tag> newTags =new ArrayList<>();
-//        for(Tag tag: tagsInPost){
-//            if(!tags1.contains(tag)){
-//                newTags.add(tag);
-//            }
-//        }
-//        post.setTags(newTags);
-//        System.out.println(post.getTags());
-        User user= new User("rahul","rahul@gmail.com","12345");
+    public String publishPost(HttpServletRequest request , @ModelAttribute("post") Post post) {
+        String tags = request.getParameter("tag");
+        List<String> tagsInPost = Arrays.asList(tags.split(","));
+        List<Tag> tagsInDB = tagService.findAllTag();
+        Set<String> tagsNameInDB =new HashSet<>();
+        for(Tag tag : tagsInDB){
+            tagsNameInDB.add(tag.getName());
+        }
+        //List<Tag> newTagsName =new ArrayList<>();
+        post.setTags(null);
+        for(String tag: tagsInPost){
+            if(!tagsNameInDB.contains(tag)){
+                Tag newTag = new Tag(tag);
+                post.addTag(newTag);
+            }else {
+                Tag newTag = tagService.findTagByName(tag);
+                post.addTag(newTag);
+            }
+        }
+        System.out.println(post.getTags());
+
+        User user= new User("vishwa","vishwa@gmail.com","12345");
         post.setAuthor(user);
         postService.publish(post);
         return "confirmationOfPost";
     }
+
 
 }
