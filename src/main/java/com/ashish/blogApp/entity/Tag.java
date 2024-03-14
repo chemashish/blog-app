@@ -2,6 +2,8 @@ package com.ashish.blogApp.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -17,15 +19,6 @@ public class Tag {
     private String createdAt;
     @Column(name = "updated_at")
     private String updatedAt;
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
     @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(
             name = "Post_Tags",
@@ -37,6 +30,10 @@ public class Tag {
     public Tag(){}
     public Tag(String name) {
         this.name = name;
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.createdAt =currentDateTime.format(formatter);
+        this.updatedAt = currentDateTime.format(formatter);
     }
 
     public int getId() {
@@ -69,6 +66,13 @@ public class Tag {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override

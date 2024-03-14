@@ -38,7 +38,6 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name="tag_id")
     )
     private List<Tag> tags;
-
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")
     private List<Comment> comments;
@@ -48,99 +47,69 @@ public class Post {
         this.content = content;
         this.author = author;
     }
-
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
-
     public String getExcerpt() {
         return excerpt;
     }
-
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
-
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
-
     public User getAuthor() {
         return author;
     }
-
     public void setAuthor(User author) {
         this.author = author;
     }
-
     public String getPublishedAt() {
         return publishedAt;
     }
-
     public void setPublishedAt(String publishedAt) {
         this.publishedAt = publishedAt;
     }
-
     public Boolean getPublished() {
         return isPublished;
     }
-
     public void setPublished(Boolean published) {
         isPublished = published;
     }
-
     public String getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
-
     public String getUpdatedAt() {
         return updatedAt;
     }
-
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
-
     public List<Tag> getTags() {
         return tags;
     }
-
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
-
-//    public void setTags(String string){
-//        List<String> tagStringList = Arrays.asList(string.split(","));
-//        List<Tag> tagsList = new ArrayList<>();
-//        for(String tempTag: tagStringList){
-//            Tag tag = new Tag(tempTag);
-//        }
-//    }
-
     public List<Comment> getComments() {
         return comments;
     }
-
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }

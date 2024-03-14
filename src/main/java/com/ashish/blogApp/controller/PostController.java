@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import java.security.Timestamp;
 import java.util.*;
-
 @Controller
 public class PostController {
     private PostService postService;
@@ -33,47 +35,56 @@ public class PostController {
     @GetMapping("/newpost")
     public String createPost(Model model){
         Post post = new Post();
-        List<Tag> tagList = post.getTags();
+        String tagString = new String();
         model.addAttribute("post",post);
-        model.addAttribute("tagList",tagList);
+        model.addAttribute("tagString",tagString);
         return "post";
     }
     @PostMapping("/publish")
     public String publishPost(HttpServletRequest request , @ModelAttribute("post") Post post,Model model) {
-            String tags = request.getParameter("tag");
-            List<String> tagsInPost = Arrays.asList(tags.split(","));
-            //List<Tag> tagsInPost = post.getTags();
-            List<Tag> tagsInDB = tagService.findAllTag();
-            Set<String> tagsNameInDB =new HashSet<>();
-            for(Tag tag : tagsInDB){
-                tagsNameInDB.add(tag.getName());
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = currentDateTime.format(formatter);
+        String tags = request.getParameter("tag");
+        String tagWithoutBrackets = tags.replace("[","").replace("]","");
+        List<String> tagsInPost = Arrays.asList(tagWithoutBrackets.split(","));
+        List<Tag> tagsInDB = tagService.findAllTag();
+        Set<String> tagsNameInDB =new HashSet<>();
+        for(Tag tag : tagsInDB){
+            tagsNameInDB.add(tag.getName());
+        }
+        List<Tag> newTagsName =new ArrayList<>();
+        post.setTags(null);
+        for(String tagName: tagsInPost){
+            if(!tagsNameInDB.contains(tagName)){
+                Tag tag = new Tag(tagName);
+                post.addTag(tag);
+            }else {
+                Tag newTag = tagService.findTagByName(tagName);
+                newTag.setUpdatedAt(formattedDateTime);
+                post.addTag(newTag);
             }
-            List<Tag> newTagsName =new ArrayList<>();
-            post.setTags(null);
-            for(String tagName: tagsInPost){
-                if(!tagsNameInDB.contains(tagName)){
-                    Tag tag = new Tag(tagName);
-                    post.addTag(tag);
-                }else {
-
-                    Tag newTag = tagService.findTagByName(tagName);
-                    post.addTag(newTag);
-                }
-            }
-            User user = userService.findUserByUserId(2);
-            post.setAuthor(user);
-            postService.publish(post);
-            return "redirect:/";
-
+        }
+        post.setPublished(true);
+        if(post.getId()==0){
+            post.setUpdatedAt(formattedDateTime);
+        }else{
+            post.setPublishedAt(formattedDateTime);
+            post.setUpdatedAt(formattedDateTime);
+        }
+        String content = post.getContent();
+        post.setExcerpt(content.length()>30?content.substring(0,31):content);
+        User user = userService.findUserByUserId(2);
+        post.setAuthor(user);
+        postService.publish(post);
+        return "redirect:/";
     }
-
     @GetMapping("/")
     public String showAllPost(Model model){
         List<Post> allPosts = postService.fetchAllPosts();
         model.addAttribute("allposts",allPosts);
         return "index";
     }
-
     @GetMapping("/post")
     public String showPost(@RequestParam("postId") int postId, Model model){
         Post post = postService.findPostById(postId);
@@ -88,13 +99,19 @@ public class PostController {
         return "index";
     }
     @GetMapping("/updatePost")
-
     public String updatePost(@RequestParam("postId") int postId,Model model){
          Post post = postService.findPostById(postId);
+         String tagString =new String();
          List<Tag> tagList = post.getTags();
-        System.out.println(tagList);
+         for(int i=0;i<tagList.size();i++){
+             if(i==tagList.size()-1){
+                 tagString+=tagList.get(i);
+             }else{
+                 tagString+=tagList.get(i)+",";
+             }
+         }
          model.addAttribute("post",post);
-         model.addAttribute("tagList",tagList);
+         model.addAttribute("tagString",tagString);
          return "post";
     }
 }

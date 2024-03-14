@@ -15,17 +15,14 @@ public class PostServiceImpl implements PostService{
     public PostServiceImpl(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
-
     @Override
     public void publish(Post post) {
          postRepository.save(post);
     }
-
     @Override
     public List<Post> fetchAllPosts() {
          return postRepository.findAll();
     }
-
     @Override
     public Post findPostById(Integer id) {
         Optional<Post> result =  postRepository.findById(id);
@@ -37,7 +34,6 @@ public class PostServiceImpl implements PostService{
         }
         return post;
     }
-
     @Override
     public void deletePostById(Integer id) {
         Optional<Post> result =  postRepository.findById(id);
@@ -49,5 +45,4 @@ public class PostServiceImpl implements PostService{
         }
         postRepository.delete(post);
     }
-
 }

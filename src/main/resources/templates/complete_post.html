@@ -3,22 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Complete Post</title>
+    <style>
+        h1{
+            margin: 40px;
+        }
+        h2,h3,footer{
+            text-align: center;
+        }
+        a{
+            text-decoration: none;
+        }
+        div,button{
+            font-size: 1.5rem;
+        }
+        .content{
+            text-align: justify;
+            margin: 30px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-
-      <h3>My Blog Application</h3>
-     <div th:object="${post}">
+     <h1>My Blog Application</h1>
+     <div class="container" th:object="${post}">
            <h2 th:text="*{title}"></h2>
          <h3><span th:text="*{author}"></span>,<span th:text="*{publishedAt}"></span></h3>
-         <div th:text="*{content}"></div>
-         <a th:href="@{/updatePost(postId=${post.id})}"
-            class="btn btn-info btn-sm">
-             Update
-         </a>
-         <a th:href="@{/deletePost(postId=${post.id})}"
-            class="btn btn-danger btn-sm">
-             Delete
-         </a>
+         <div class="content" th:text="*{content}"></div>
+         <footer>
+             <a th:href="@{/updatePost(postId=${post.id})}">
+                 <button>Update</button>
+             </a>
+             <a th:href="@{/deletePost(postId=${post.id})}">
+                 <button>Delete</button>
+             </a>
+         </footer>
      </div>
 
 </body>

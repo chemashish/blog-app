@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Post</title>
     <style>
         body{
-            font-size: 1.5rem;
+            font-size: 1.0rem;
             margin: 70px 70px 70px 70px;
         }
         .content{
@@ -19,12 +19,12 @@
         }
         input{
             margin-top: 20px;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             width: 100%;
             height: 50px;
         }
         .content{
-            height: 65vh;
+            height: 55vh;
         }
     </style>
 </head>
@@ -32,15 +32,12 @@
     <div>
         <h1>New/Edit Post</h1>
     </div>
-
+    <a href="#">Login</a>
    <form th:action="@{/publish}"  th:object="${post}" method="POST">
        <input type="hidden" th:field="*{id}">
        <input type="text" placeholder="Title" th:field="*{title}"/>
        <br>
-       <input type="text" placeholder="Tags" name="tag" th:value="*{tags}">
-
-<!--       <input type="text" placeholder="Tags" th:text="${tagList}">-->
-
+       <input type="text" placeholder="Tags" name="tag" th:value="${tagString}">
        <textarea class="content" placeholder="Write here...." th:field="*{content}"></textarea>
        <br>
        <input type="submit" value="Publish">
