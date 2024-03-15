@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post with Comments</title>
+    <style>
+        h1{
+            margin: 40px;
+        }
+        h2,h3,footer{
+            text-align: center;
+        }
+        a{
+            text-decoration: none;
+        }
+        div,button{
+            font-size: 1.5rem;
+        }
+        .content{
+            text-align: justify;
+            margin: 30px;
+            padding: 10px;
+        }
+        input{
+            margin-left: 40px;
+            width: 300px;
+            height: 3rem;
+        }
+        .comment{
+            border: 2px solid black;
+            margin: 30px;
+            padding: 15px;
+        }
+        .submit{
+            background: none;
+            width: 50px;
+            border: none;
+            font-size: 2.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Blog Application</h1>
+    <div class="container" th:object="${post}">
+        <h2 th:text="*{title}"></h2>
+        <h3><span th:text="*{author}"></span>,<span th:text="*{publishedAt}"></span></h3>
+        <div class="content" th:text="*{content}"></div>
+        <form th:action="@{'/addComment'+${post.id}}" method="POST">>
+            <input class="comment" type="text" placeholder="Comment here..." name="comment">
+            <input class="submit" type="submit" value="&#10148;" ></input>
+        </form>
+    </div>
+    <div class="comment" th:each="comment:${comments}">
+                <p th:text="${comment.name}"></p>
+                <p th:text="${comment.email}"></p>
+                <p th:text="${comment.comment}"></p>
+<!--                <a th:href="@{/updateComment/postId/{postId}/commentId/{commentId}(postId=${post.id})(commentId=${comment.id})}">-->
+<!--                    <button>Update</button>-->
+<!--                </a>-->
+                <a th:href="@{/deletecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}">
+                    <button>Delete</button>
+                </a>
+    </div>
+
+</body>
+</html>
