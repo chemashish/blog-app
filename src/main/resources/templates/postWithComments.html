@@ -45,18 +45,22 @@
         <h2 th:text="*{title}"></h2>
         <h3><span th:text="*{author}"></span>,<span th:text="*{publishedAt}"></span></h3>
         <div class="content" th:text="*{content}"></div>
-        <form th:action="@{'/addComment'+${post.id}}" method="POST">>
-            <input class="comment" type="text" placeholder="Comment here..." name="comment">
+        <form th:action="@{'/addComment'+${post.id}}" th:object="${comment}" method="POST">>
+<!--            <input class="comment" type="text" placeholder="Comment here..." name="comment" th:value="${comment}">-->
+            <input type="hidden" th:field="*{id}">
+            <input class="comment" type="text" th:field="*{contentOfComment}">
             <input class="submit" type="submit" value="&#10148;" ></input>
         </form>
     </div>
-    <div class="comment" th:each="comment:${comments}">
+
+    <div class="comment" th:each="comment:${post.getComments()}">
+                <p th:text="${comment.id}"></p>
                 <p th:text="${comment.name}"></p>
                 <p th:text="${comment.email}"></p>
-                <p th:text="${comment.comment}"></p>
-<!--                <a th:href="@{/updateComment/postId/{postId}/commentId/{commentId}(postId=${post.id})(commentId=${comment.id})}">-->
-<!--                    <button>Update</button>-->
-<!--                </a>-->
+                <p th:text="${comment.contentOfComment}"></p>
+                <a th:href="@{/updatecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}">
+                    <button>Update</button>
+                </a>
                 <a th:href="@{/deletecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}">
                     <button>Delete</button>
                 </a>

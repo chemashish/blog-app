@@ -19,7 +19,7 @@ public class CommentServiceImpl implements CommentService{
         if(result.isPresent()){
             comment = result.get();
         }else {
-            throw new RuntimeException();
+            throw new RuntimeException("Comment of this not found");
         }
         return comment;
     }
@@ -27,5 +27,10 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void deleteCommentByCommentId(Comment comment) {
          commentRepository.delete(comment);
+    }
+
+    @Override
+    public void saveComment(Comment comment) {
+        commentRepository.save(comment);
     }
 }

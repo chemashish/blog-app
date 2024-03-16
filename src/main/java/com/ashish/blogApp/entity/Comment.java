@@ -2,7 +2,6 @@ package com.ashish.blogApp.entity;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 @Entity
 @Table(name = "comments")
 public class Comment {
@@ -15,14 +14,14 @@ public class Comment {
     @Column(name = "email")
     private String email;
     @Column(name = "comment")
-    private String comment;
+    private String contentOfComment;
     @Column(name = "created_at")
     private String createdAt;
     @Column(name = "updated_at")
     private String updatedAt;
     public Comment(){}
-    public Comment(String comment) {
-        this.comment = comment;
+    public Comment(String contentOfComment) {
+        this.contentOfComment = contentOfComment;
     }
     public int getId() {
         return id;
@@ -42,11 +41,11 @@ public class Comment {
     public void setEmail(String email) {
         this.email = email;
     }
-    public String getComment() {
-        return comment;
+    public String getContentOfComment() {
+        return contentOfComment;
     }
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setContentOfComment(String comment) {
+        this.contentOfComment = comment;
     }
     public String getCreatedAt() {
         return createdAt;
@@ -62,13 +61,6 @@ public class Comment {
     }
     @Override
     public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", comment='" + comment + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                '}';
+        return contentOfComment;
     }
 }
