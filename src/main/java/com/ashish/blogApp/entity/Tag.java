@@ -19,10 +19,10 @@ public class Tag {
     private String createdAt;
     @Column(name = "updated_at")
     private String updatedAt;
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(
             name = "Post_Tags",
-            joinColumns =@JoinColumn(name = "tag_id"),
+            joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name="post_id")
     )
     private List<Post> posts;
@@ -35,7 +35,6 @@ public class Tag {
         this.createdAt =currentDateTime.format(formatter);
         this.updatedAt = currentDateTime.format(formatter);
     }
-
     public int getId() {
         return id;
     }
@@ -67,6 +66,7 @@ public class Tag {
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
+
     public List<Post> getPosts() {
         return posts;
     }

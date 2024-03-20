@@ -1,6 +1,7 @@
 package com.ashish.blogApp.service;
 
 import com.ashish.blogApp.dao.TagRepository;
+import com.ashish.blogApp.entity.Post;
 import com.ashish.blogApp.entity.Tag;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,10 @@ public class TagServiceImpl implements TagService{
     @Override
     public Tag findTagByName(String name) {
         return tagRepository.findTagByName(name);
+    }
+
+    @Override
+    public List<Post> findAllPostsOfParticularTag(String name) {
+        return tagRepository.findTagByName(name).getPosts();
     }
 }

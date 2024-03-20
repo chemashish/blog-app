@@ -6,6 +6,5 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 public interface CommentService {
     Comment findCommentFindByCommentId(Integer id);
     void deleteCommentByCommentId(Comment comment);
-
     void saveComment(Comment comment);
 }

@@ -125,4 +125,9 @@ public class Post {
         }
         comments.add(comment);
     }
+
+    @Override
+    public String toString() {
+        return "0"+id;
+    }
 }
