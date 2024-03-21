@@ -219,12 +219,14 @@ public class PostController {
                             @RequestParam(value = "startDate",required = false) String startDateOnFilter,
                             @RequestParam(value = "endDate",required = false) String endDateOnFilter,
                             @RequestParam(value = "selectedOption",required = false) String optionOnFilter,
-                            @RequestParam(value = "searchedText",required = false) String searchedTextOnFilter,
+                            @RequestParam(value = "searchedTextOnFilter",required = false) String searchedTextOnFilter,
                             @RequestParam("authorsForRemainChecked") List<String> authorsForRemainChecked,
                             @RequestParam("tagsForRemainChecked") List<String> tagsForRemainChecked,
+                            @RequestParam(value = "searchedTextAfterFilter",required = false)  String searchedTextAfterFilter,
                             Model model
                             )
     {
+
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentDateTime.format(formatter);
@@ -237,6 +239,11 @@ public class PostController {
         List<Post> posts = new ArrayList<>();
         HashMap< Integer , Tag > tagWithThierIds = new HashMap<>();
         HashMap< Integer , User> authorWithThierIds = new HashMap<>();
+
+        if(!(searchedTextOnFilter.isEmpty() && searchedTextAfterFilter.isEmpty()) && !(searchedTextOnFilter.equals(searchedTextAfterFilter))){
+            authorsOnFilter = null;
+            tagsOnFilter = null;
+        }
 
         List<User> authors = new ArrayList<>();
         List<Tag> tags = new ArrayList<>();

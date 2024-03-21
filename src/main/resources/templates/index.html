@@ -115,7 +115,8 @@
         </select>
         <br>
         <br>
-        <input type="text" name="searchedText" th:value="${searchedText}"  placeholder="Title, author or Content....">
+        <input type="text" name="searchedTextOnFilter" th:value="${searchedText}"  placeholder="Title, author or Content....">
+        <input type="hidden" name="searchedTextAfterFilter" th:value="${searchedText}">
         <br>
         <button type="submit">Search</button>
     </form>
