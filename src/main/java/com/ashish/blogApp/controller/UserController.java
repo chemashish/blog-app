@@ -59,6 +59,6 @@ public class UserController {
 
         userService.saveUser(user);
         session.setAttribute("user", user);
-        return "register";
+        return "login";
     }
 }
