@@ -41,10 +41,11 @@ public class UserController {
     }
 
     @PostMapping("/processRegistrationForm")
-    public String processRegistrationForm(
+    public String processRegistrationForm(@RequestParam String role,
             @Valid @ModelAttribute("user") User user,
             BindingResult theBindingResult,
             HttpSession session, Model model) {
+        user.setRole(role);
         String userName = user.getName();
         if (theBindingResult.hasErrors()) {
             return "register";
@@ -55,7 +56,7 @@ public class UserController {
             model.addAttribute("registrationError", "User name already exists.");
             return "register";
         }
-        user.setRole("AUTHOR");
+
         userService.saveUser(user);
         session.setAttribute("user", user);
         return "register";
