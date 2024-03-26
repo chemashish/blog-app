@@ -8,6 +8,8 @@ import com.ashish.blogApp.service.PostService;
 import com.ashish.blogApp.service.UserService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.boot.Banner;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,62 +23,72 @@ public class CommentController {
     private PostService postService;
     private UserService userService;
     private CommentService commentService;
-    public CommentController(PostService postService , UserService userService , CommentService commentService){
+
+    public CommentController(PostService postService, UserService userService, CommentService commentService) {
         this.postService = postService;
         this.userService = userService;
         this.commentService = commentService;
     }
+
     @GetMapping("/commentOnPost")
-    public String comment(@RequestParam("postId") int postId , Model model){
+    public String comment(@RequestParam("postId") int postId, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails != null) {
+            String username = userDetails.getUsername();
+            User currentUser = userService.findUserByUserName(username);
+            model.addAttribute("currentUser", currentUser);
+        }
         Post post = postService.findPostById(postId);
-        model.addAttribute("post",post);
-        model.addAttribute("comments",post.getComments());
+        model.addAttribute("post", post);
+        model.addAttribute("comments", post.getComments());
         Comment comment = new Comment();
-        model.addAttribute("comment",comment);
+        model.addAttribute("comment", comment);
         return "postWithComments";
     }
+
     @PostMapping("/addComment{postId}")
-    public String addComment(@PathVariable("postId") int postId, @ModelAttribute("comment") Comment comment, Model model){
+    public String addComment(@PathVariable("postId") int postId, @ModelAttribute("comment") Comment comment, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         //Login
-        User user = userService.findUserByUserId(8);
+        User user = userService.findUserByUserName(userDetails.getUsername());
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentDateTime.format(formatter);
         Post post = postService.findPostById(postId);
-        if(comment.getId()==0){
+        if (comment.getId() == 0) {
             comment.setName(user.getName());
             comment.setEmail(user.getEmail());
             comment.setCreatedAt(formattedDateTime);
             comment.setUpdatedAt(formattedDateTime);
             post.addComment(comment);
             postService.publish(post);
-        }else{
+        } else {
             comment.setName(user.getName());
             comment.setEmail(user.getEmail());
             comment.setUpdatedAt(formattedDateTime);
             commentService.saveComment(comment);
         }
 
-        model.addAttribute("post",post);
-        model.addAttribute("comments",post.getComments());
+        model.addAttribute("post", post);
+        model.addAttribute("comments", post.getComments());
         return "postWithComments";
     }
+
     @GetMapping("/deletecomment/postId/{postId}/commentId/{commentId}")
-    public String deleteComment(@PathVariable("postId") int postId,@PathVariable("commentId") int commentId, Model model){
+    public String deleteComment(@PathVariable("postId") int postId, @PathVariable("commentId") int commentId, Model model) {
         Post post = postService.findPostById(postId);
         Comment comment = commentService.findCommentFindByCommentId(commentId);
         commentService.deleteCommentByCommentId(comment);
-        Comment  commentForModel = new Comment();
+        Comment commentForModel = new Comment();
         model.addAttribute("post", post);
-        model.addAttribute("comment",commentForModel);
+        model.addAttribute("comment", commentForModel);
         return "postWithComments";
     }
+
     @GetMapping("/updatecomment/postId/{postId}/commentId/{commentId}")
-    public String updateComment(@PathVariable("postId") int postId,@PathVariable("commentId") int commentId, Model model){
+    public String updateComment(@PathVariable("postId") int postId, @PathVariable("commentId") int commentId, Model model) {
         Post post = postService.findPostById(postId);
         Comment comment = commentService.findCommentFindByCommentId(commentId);
         model.addAttribute("post", post);
-        model.addAttribute("comment",comment);
+        model.addAttribute("comment", comment);
         return "postWithComments";
     }
 }

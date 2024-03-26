@@ -8,16 +8,15 @@
     </style>
 </head>
 <body>
-    <h2>Login</h2>
-    <form th:action="@{/login}" th:object="${User}" method="Post">
-
-        <input placeholder="Email" type="text" th:field="*{email}">
-        <br><br>
-        <input placeholder="Password" type="text" th:field="*{password}">
+    <h2>Login Page</h2>
+    <form th:action="@{/authenticateTheUser}" th:object="${user}" method="Post">
+        <input name="username" placeholder="Username" type="text" th:value="*{name}">
+        <input name="password" placeholder="Password" type="text" th:value="*{password}">
         <br><br>
         <input type="submit" value="Submit">
         <br><br>
     </form>
     <p>Doesn't have account? <a href="/register">Create One</a></p>
+
 </body>
 </html>

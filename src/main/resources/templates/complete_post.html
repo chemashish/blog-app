@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Complete Post</title>
@@ -30,12 +30,14 @@
          <h3><span th:text="*{author}"></span>,<span th:text="*{publishedAt}"></span></h3>
          <div class="content" th:text="*{content}"></div>
          <footer>
-             <a th:href="@{/updatePost(postId=${post.id})}">
+             <a th:href="@{/updatePost(postId=${post.id})}" th:if="${post.author.name==currentUser.name ||  #authorization.expression('hasRole(''ADMIN'')')}">
                  <button>Update</button>
              </a>
-             <a th:href="@{/deletePost(postId=${post.id})}">
+
+             <a th:href="@{/deletePost(postId=${post.id})}"  th:if="${post.author.name==currentUser.name || #authorization.expression('hasRole(''ADMIN'')')}">
                  <button>Delete</button>
              </a>
+
              <a th:href="@{/commentOnPost(postId=${post.id})}">
                  <button>Comment</button>
              </a>

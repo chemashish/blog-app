@@ -58,10 +58,13 @@
                 <p th:text="${comment.name}"></p>
                 <p th:text="${comment.email}"></p>
                 <p th:text="${comment.contentOfComment}"></p>
-                <a th:href="@{/updatecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}">
-                    <button>Update</button>
-                </a>
-                <a th:href="@{/deletecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}">
+                <div>
+                    <a th:href="@{/updatecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}" th:if="${comment.name == currentUser.name || #authorization.expression('hasRole(''ADMIN'')') }">
+                        <button>Update</button>
+                    </a>
+                </div>
+
+                <a th:href="@{/deletecomment/postId/{postId}/commentId/{commentId}(postId = ${post.id}, commentId = ${comment.id})}" th:if="${comment.name == currentUser.name || #authorization.expression('hasRole(''ADMIN'')')}">
                     <button>Delete</button>
                 </a>
     </div>

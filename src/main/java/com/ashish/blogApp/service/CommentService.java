@@ -7,4 +7,5 @@ public interface CommentService {
     Comment findCommentFindByCommentId(Integer id);
     void deleteCommentByCommentId(Comment comment);
     void saveComment(Comment comment);
+    Comment save(Comment comment);
 }

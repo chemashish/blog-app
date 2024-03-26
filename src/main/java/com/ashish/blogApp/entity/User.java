@@ -1,6 +1,9 @@
 package com.ashish.blogApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,14 +16,32 @@ public class User {
     @Column(name = "id")
     private int id;
     @Column(name = "name")
+    @NotNull(message = "is required")
+    @Size(min = 1,message = "is required")
     private String name;
     @Column(name = "email")
+    @NotNull(message = "is required")
+    @Size(min = 1,message = "is required")
     private String email;
     @Column(name = "password")
+    @NotNull(message = "is required")
+    @Size(min = 1,message = "is required")
     private String password;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Post> posts;
+
+    @JoinColumn(name = "role")
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public User(){}
     public User(String name, String email, String password) {
@@ -74,6 +95,7 @@ public class User {
         }
         posts.add(post);
     }
+
     @Override
     public String toString() {
         return name;

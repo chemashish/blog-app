@@ -1,5 +1,6 @@
 package com.ashish.blogApp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,8 @@ public class Tag {
     private String createdAt;
     @Column(name = "updated_at")
     private String updatedAt;
+
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(
             name = "Post_Tags",

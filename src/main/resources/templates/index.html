@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        body{
+        body {
             margin: 20px;
         }
-        .container-main{
+
+        .container-main {
             margin: auto;
         }
-        .main-container{
+
+        .main-container {
             display: flex;
             flex-wrap: wrap;
 
         }
-        .container{
+        .filter{
+            width: 30%;
+        }
+
+        .container {
             width: 45%;
             gap: 4px;
             height: 20%;
@@ -24,61 +30,77 @@
             padding: 4px;
 
         }
-        div a{
+
+        div a {
             color: black;
             text-decoration: none;
         }
-        .heading{
+
+        .heading {
             margin: 10px;
         }
-        .content{
+
+        .content {
             margin: 10px;
         }
-        nav{
+
+        nav {
             margin: 10px;
 
         }
-        main{
-            display:flex;
+
+        main {
+            display: flex;
         }
 
-        .filter{
-            margin-left:20px;
+        .filter {
+            margin-left: 20px;
         }
 
-        .filter form{
-            display:flex;
-            flex-direction:column;
-            width:100px;
+        .filter form {
+            display: flex;
+            flex-direction: column;
+            width: 100px;
         }
 
-        .filter form label{
-            display:flex;
-            align-items:center;
+        .filter form label {
+            display: flex;
+            align-items: center;
         }
-        .filter-tags{
+
+        .filter-tags {
             width: 200px;
             height: 130px;
             overflow-x: hidden;
             overflow-y: auto;
-            text-align:justify;
+            text-align: justify;
         }
-        .date{
+
+        .date {
             margin-top: 20px;
             width: 200px;
             overflow-x: hidden;
             overflow-y: auto;
-            text-align:justify;
+            text-align: justify;
         }
     </style>
 </head>
 <body>
+<table>
+<tr></tr>
+<span>
 <div class="filter">
-    <form th:action="@{/filter}" method="post">
+    <form th:action="@{/filter}" method="get">
+        <input type="text" name="searchedTextOnFilter" th:value="${searchedText}"
+               placeholder="Title, author or Content....">
+        <input type="hidden" name="searchedTextAfterFilter" th:value="${searchedText}">
+        <br>
+        <button type="submit">Search</button>
         <h3>Author</h3>
         <div class="filter-tags">
             <div th:object="${user}" th:each="user:${users}">
-                <input type="checkbox" name="authorsOnFilter" th:checked="${authorsOnFilter!=null && authorsOnFilter.contains(user.name)}"
+                <input type="checkbox" name="authorsOnFilter"
+                       th:checked="${authorsOnFilter!=null && authorsOnFilter.contains(user.name)}"
                        th:value="${user.name}" th:text="${user.name}" th:onchange="this.form.submit()"/>
                 <input type="hidden" name="authorsForRemainChecked" th:value="${user.name}"/>
             </div>
@@ -87,9 +109,10 @@
         <h3>Tags</h3>
         <div class="filter-tags">
             <div th:object="${tag}" th:each="tag:${tags}">
-                <input type="checkbox" name="tagsOnFilter" th:checked="${tagsOnFilter!=null && tagsOnFilter.contains(tag.name)}"
+                <input type="checkbox" name="tagsOnFilter"
+                       th:checked="${tagsOnFilter!=null && tagsOnFilter.contains(tag.name)}"
                        th:value="${tag.name}" th:text="${tag.name}" th:onchange="this.form.submit()"/>
-                <input  type="hidden"  name="tagsForRemainChecked" th:value="${tag.name}"/>
+                <input type="hidden" name="tagsForRemainChecked" th:value="${tag.name}"/>
             </div>
         </div>
         <br>
@@ -97,62 +120,92 @@
         <div class="date">
             <label>
                 <div>Start Date:</div>
-                <div><input type="date" name="startDate" ></div>
+                <div><input type="date" name="startDate"></div>
             </label>
         </div>
         <div class="date">
             <label>
                 <div>End Date:</div>
-                <div><input type="date" name="endDate" ></div>
+                <div><input type="date" name="endDate"></div>
             </label>
         </div>
         <br>
         <p>Sort By</p>
         <select name="selectedOption">
             <option value="">Sort By</option>
-            <option value="date">Published Date</option>
-            <option value="title">Title</option>
+            <option value="asc">Oldest To Latest</option>
+            <option value="desc">Lastest To Oldest</option>
         </select>
         <br>
         <br>
-        <input type="text" name="searchedTextOnFilter" th:value="${searchedText}"  placeholder="Title, author or Content....">
-        <input type="hidden" name="searchedTextAfterFilter" th:value="${searchedText}">
-        <br>
-        <button type="submit">Search</button>
+
+
+        <div th:if="${totalPages >1}">
+            <div class="row col-sm-10">
+                <div class="col-sm-2">
+                    Total Rows: [[${totalItems}]]
+                </div>
+                <div class="col-sm-1">
+                    <span th:each="i: ${#numbers.sequence(1,totalPages)}">
+                        <a th:if="${currentPage != i}"
+                           th:href="@{/page(pageNo=${i},
+                                        authorsOnFilter=${users},
+                                        tagsOnFilter=${tags},
+                                        startDate=${startDate},
+                                        endDate=${endDate},
+                                        searchedTextOnFilter=${searchedText},
+                                        authorsForRemainChecked=${users},
+                                        tagsForRemainChecked=${tags}
+                                        )}">
+                            [[${i}]]</a>
+                        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
+                    </span>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}"
+                       th:href="@{'/page/'+${currentPage+1}}"
+                    >Next</a>
+                    <span th:unless="${currentPage < totalPages}">Next</span>
+                </div>
+                <div class="col-sm-1">
+                    <a th:if="${currentPage < totalPages}" th:href="@{'/page/'+${totalPages}}">Last</a>
+                    <span th:unless="${currentPage < totalPages}">Next</span>
+                </div>
+
+            </div>
+        </div>
     </form>
 </div>
-     <nav>
+</span>
+<span>
+<nav>
          <span>
              <h2>My Blog Application</h2>
          </span>
          <span>
-             <a>Login</a>
+             <a th:href="@{/login}">Login</a>
+         </span>
+          <span>
+             <a th:href="@{/newpost}">Create Post</a>
          </span>
 
-<!--         <form th:action="@{/sortPost}" th:object="${posts}" method="post">-->
-<!--             <input type="hidden" name="searchedText" th:value="${searchedText}"  >-->
-<!--            -->
-<!--             <button type="submit">Submit</button>-->
-<!--         </form>-->
-<!--         <br><br>-->
-<!--         <form th:action="@{/searchPost}" method="post">-->
-<!--            -->
-<!--         </form>-->
-     </nav>
-     <div class="container-main">
-        <div class="main-container">
-             <div  class="container" th:each="post:${posts}" >
-                 <a  th:href="@{/post(postId=${post.id})}" class="blog-card">
-                     <div class="heading">
-                         <h4 th:text="${post.title}" >My Blog Application</h4>
-                         <span th:text="${post.author}"></span>,
-                         <span th:text="${post.publishedAt}"></span>
-                     </div>
-                     <div class="content" th:text="${post.excerpt}">
-                     </div>
-                 </a>
-             </div>
+</nav>
+<div class="container-main">
+    <div class="main-container">
+        <div class="container" th:each="post:${posts}">
+            <a th:href="@{/post(postId=${post.id})}" class="blog-card">
+                <div class="heading">
+                    <h4 th:text="${post.title}">My Blog Application</h4>
+                    <span th:text="${post.author}"></span>,
+                    <span th:text="${post.publishedAt}"></span>
+                </div>
+                <div class="content" th:text="${post.excerpt}">
+                </div>
+            </a>
         </div>
-     </div>
+    </div>
+</div>
+</span>
+</table>
 </body>
 </html>
