@@ -55,6 +55,7 @@ public class UserController {
             model.addAttribute("registrationError", "User name already exists.");
             return "register";
         }
+        user.setRole("AUTHOR");
         userService.saveUser(user);
         session.setAttribute("user", user);
         return "register";
